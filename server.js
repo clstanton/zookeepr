@@ -16,6 +16,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
+// Express.js middleware for file access. front-end code can now be accessed without having a specific server endpoint created for it. //
+app.use(express.static('public'));
 
 // This filter function will take in req.query as an argument and filter accordingly. //
 function filterByQuery(query, animalsArray) {
@@ -72,6 +74,8 @@ function createNewAnimal(body, animalsArray) {
       JSON.stringify({ animals: animalsArray }, null, 2)
     );
     return animal;
+
+  
   }
 
 function validateAnimal(animal) {
@@ -90,7 +94,7 @@ function validateAnimal(animal) {
     return true;
   }
 
-// add the route. get() method requires two arguments: 1) string that describes the route the client will have to fetch from & 2) callback function that will execute every time that route is accessed with a GET request. //
+// adds route. get() method requires two arguments: 1) string that describes the route the client will have to fetch from & 2) callback function that will execute every time that route is accessed with a GET request. //
 app.get('/api/animals', (req, res) => {
     let results = animals;
     if (req.query) {
@@ -120,6 +124,21 @@ app.post('/api/animals', (req, res) => {
       const animal = createNewAnimal(req.body, animals);
       res.json(animal);
     }
+  });
+
+// route that serves our index.html page //
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+
+// This route will take us to /animals (no api) //
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+  });
+
+// This route will take us to /zookeepers (no api) //
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
   });
 
 app.listen(PORT, () => {
