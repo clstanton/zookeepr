@@ -75,7 +75,7 @@ function createNewAnimal(body, animalsArray) {
     );
     return animal;
 
-  
+
   }
 
 function validateAnimal(animal) {
